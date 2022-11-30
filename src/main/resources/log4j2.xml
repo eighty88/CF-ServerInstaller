@@ -2,7 +2,7 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{HH:mm:ss}] [%level]: %msg{nolookups}%n" />
+            <PatternLayout disableAnsi="false" pattern="%style{[%d{HH:mm:ss}]}{green} %highlight{[%t/%level]}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue}: %msg{nolookups}%n" />
         </Console>
     </Appenders>
 
