@@ -15,18 +15,20 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Utils {
-    public static final String PROJECT_URL = "https://www.curseforge.com/projects/";
+    public static final String API_URL = "https://www.curseforge.com/api/v1/mods/${id}/files/${file}/download";
+    // public static final String PROJECT_URL = "https://www.curseforge.com/projects/";
     public static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/${version}-${forge-version}/forge-${version}-${forge-version}-installer.jar";
 
     public static String getCurseModUrl(int id, int file) {
-        return getRedirectUrl(getRedirectUrl(PROJECT_URL + id) + "/download/" + file + "/file");
+        return getRedirectUrl(API_URL.replace("${id}", String.valueOf(id)).replace("${file}", String.valueOf(file)));
+        // return getRedirectUrl(getRedirectUrl(PROJECT_URL + id) + "/download/" + file + "/file");
     }
 
     private static String getRedirectUrl(String url) {
         try (Response response = new OkHttpClient.Builder().addNetworkInterceptor(chain -> chain.proceed(chain.request())).build().newCall(new Request.Builder().url(url).build()).execute()) {
             return response.request().url().toString();
         } catch (IOException e) {
-            Main.getLogger().error("Get URL failed. (" + e + ")");
+            Main.getLogger().error("Get URL failed. ({})", String.valueOf(e));
             return "";
         }
     }
@@ -93,7 +95,7 @@ public class Utils {
                     logger.debug(out.getParentFile().getAbsolutePath());
                 }
 
-                logger.info("Unzipping to " + alignNumber(out.getAbsolutePath(), 80, false));
+                logger.info("Unzipping to {}", alignNumber(out.getAbsolutePath(), 80, false));
 
                 while ((length = is.read(buffer)) > 0) {
                     os.write(buffer, 0, length);
@@ -103,7 +105,7 @@ public class Utils {
                 is.closeEntry();
             }
         } catch (IOException e) {
-            logger.error("File Not Found. (" + e + ")");
+            logger.error("File Not Found. ({})", String.valueOf(e));
         }
     }
 
